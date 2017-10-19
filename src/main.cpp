@@ -1,19 +1,4 @@
 /*******************************************************************************
- * Copyright (c) 2015 Thomas Telkamp and Matthijs Kooijman
- *
- * Permission is hereby granted, free of charge, to anyone
- * obtaining a copy of this document and accompanying files,
- * to do whatever they want with them without any restriction,
- * including, but not limited to, copying, modification and redistribution.
- * NO WARRANTY OF ANY KIND IS PROVIDED.
- *
- * This example sends a valid LoRaWAN packet with static payload,
- * using frequency and encryption settings matching those of
- * the (early prototype version of) The Things Network.
- *
- * Note: LoRaWAN per sub-band duty-cycle limitation is enforced (1% in g1,
- *  0.1% in g2).
- *
  * ToDo:
  * - set NWKSKEY (value from staging.thethingsnetwork.com)
  * - set APPKSKEY (value from staging.thethingsnetwork.com)
@@ -21,7 +6,6 @@
  * - optionally comment #define DEBUG
  * - optionally comment #define SLEEP
  * - set TX_INTERVAL in seconds
- * - change mydata to another (small) static text
  *
  *******************************************************************************/
 #include <lmic.h>
@@ -42,11 +26,11 @@
 //#define DHTTYPE DHT21   // DHT 21 (AM2301)
 
 // LoRaWAN NwkSKey, your network session key, 16 bytes (from staging.thethingsnetwork.org)
-static const PROGMEM u1_t NWKSKEY[16] = { 0x93, 0x29, 0x7B, 0x46, 0xEC, 0xCC, 0x60, 0x40, 0x3A, 0xB4, 0xE1, 0x7A, 0xCA, 0x86, 0x53, 0x28 };
+static const PROGMEM u1_t NWKSKEY[16] = {  };
 // LoRaWAN AppSKey, application session key, 16 bytes  (from staging.thethingsnetwork.org)
-static const u1_t PROGMEM APPSKEY[16] = { 0xD6, 0x2C, 0x69, 0x08, 0xF1, 0x7A, 0x05, 0x21, 0x2F, 0xDF, 0x9D, 0x0B, 0x37, 0x2B, 0xD8, 0x02 };
-// LoRaWAN end-device address (DevAddr), ie 0x26011CC3  (from staging.thethingsnetwork.org)
-static const u4_t DEVADDR = 0x26011CC3 ; // <-- Change this address for every node!
+static const u1_t PROGMEM APPSKEY[16] = {  };
+// LoRaWAN end-device address (DevAddr),  (from staging.thethingsnetwork.org)
+static const u4_t DEVADDR = 0x0; // <-- Change this address for every node!
 
 // show debug statements; comment next line to disable debug statements
 #define DEBUG
@@ -356,16 +340,15 @@ int main(int argc, char const *argv[]) {
   // your network here (unless your network autoconfigures them).
   // Setting up channels should happen after LMIC_setSession, as that
   // configures the minimal channel set.
-  //LMIC_setupChannel(0, 868100000, DR_RANGE_MAP(DR_SF12, DR_SF12),  BAND_CENTI);      // g-band
-  // LMIC_setupChannel(0, 868100000, DR_RANGE_MAP(DR_SF12, DR_SF7),  BAND_CENTI);      // g-band
-  // LMIC_setupChannel(1, 868300000, DR_RANGE_MAP(DR_SF12, DR_SF7B), BAND_CENTI);      // g-band
-  // LMIC_setupChannel(2, 868500000, DR_RANGE_MAP(DR_SF12, DR_SF7),  BAND_CENTI);      // g-band
-  // LMIC_setupChannel(3, 867100000, DR_RANGE_MAP(DR_SF12, DR_SF7),  BAND_CENTI);      // g-band
-  // LMIC_setupChannel(4, 867300000, DR_RANGE_MAP(DR_SF12, DR_SF7),  BAND_CENTI);      // g-band
-  // LMIC_setupChannel(5, 867500000, DR_RANGE_MAP(DR_SF12, DR_SF7),  BAND_CENTI);      // g-band
-  // LMIC_setupChannel(6, 867700000, DR_RANGE_MAP(DR_SF12, DR_SF7),  BAND_CENTI);      // g-band
-  // LMIC_setupChannel(7, 867900000, DR_RANGE_MAP(DR_SF12, DR_SF7),  BAND_CENTI);      // g-band
-  // LMIC_setupChannel(8, 868800000, DR_RANGE_MAP(DR_FSK,  DR_FSK),  BAND_MILLI);      // g2-band
+  LMIC_setupChannel(0, 868100000, DR_RANGE_MAP(DR_SF12, DR_SF7),  BAND_CENTI);      // g-band
+  LMIC_setupChannel(1, 868300000, DR_RANGE_MAP(DR_SF12, DR_SF7B), BAND_CENTI);      // g-band
+  LMIC_setupChannel(2, 868500000, DR_RANGE_MAP(DR_SF12, DR_SF7),  BAND_CENTI);      // g-band
+  LMIC_setupChannel(3, 867100000, DR_RANGE_MAP(DR_SF12, DR_SF7),  BAND_CENTI);      // g-band
+  LMIC_setupChannel(4, 867300000, DR_RANGE_MAP(DR_SF12, DR_SF7),  BAND_CENTI);      // g-band
+  LMIC_setupChannel(5, 867500000, DR_RANGE_MAP(DR_SF12, DR_SF7),  BAND_CENTI);      // g-band
+  LMIC_setupChannel(6, 867700000, DR_RANGE_MAP(DR_SF12, DR_SF7),  BAND_CENTI);      // g-band
+  LMIC_setupChannel(7, 867900000, DR_RANGE_MAP(DR_SF12, DR_SF7),  BAND_CENTI);      // g-band
+  LMIC_setupChannel(8, 868800000, DR_RANGE_MAP(DR_FSK,  DR_FSK),  BAND_MILLI);      // g2-band
   // TTN defines an additional channel at 869.525Mhz using SF9 for class B
   // devices' ping slots. LMIC does not have an easy way to define set this
   // frequency and support for class B is spotty and untested, so this
@@ -373,13 +356,15 @@ int main(int argc, char const *argv[]) {
 
 
   // Disable link check validation
-  LMIC_setLinkCheckMode(0);
+  
+   LMIC_setLinkCheckMode(0);
+  // Uncomment to use channel 868100000 only
+  // for(int i=0; i<9; i++) { // For EU; for US use i<71
+  //     if(i != 0) {
+  //         LMIC_disableChannel(i);
+  //     }
+  // }
 
-  for(int i=0; i<9; i++) { // For EU; for US use i<71
-      if(i != 0) {
-          LMIC_disableChannel(i);
-      }
-  }
   // Set data rate (SF) and transmit power for uplink
   LMIC_setDrTxpow(DR_SF12, 14);
 
