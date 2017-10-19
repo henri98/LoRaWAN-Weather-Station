@@ -1,0 +1,52 @@
+{
+    "description": "CayenneLPP Arduino Library.", 
+    "repository": {
+        "url": "https://github.com/sabas1080/CayenneLPP", 
+        "type": "git"
+    }, 
+    "platforms": [
+        "atmelavr", 
+        "atmelsam", 
+        "espressif8266", 
+        "intel_arc32", 
+        "microchippic32", 
+        "nordicnrf51", 
+        "teensy", 
+        "timsp430"
+    ], 
+    "export": {
+        "exclude": [
+            "extras", 
+            "docs", 
+            "tests", 
+            "test", 
+            "*.doxyfile", 
+            "*.pdf"
+        ], 
+        "include": null
+    }, 
+    "authors": [
+        {
+            "maintainer": false, 
+            "name": "The Things Network", 
+            "url": null, 
+            "email": null
+        }, 
+        {
+            "maintainer": true, 
+            "name": "Andres Sabas", 
+            "url": null, 
+            "email": "s@theinventorhouse.org"
+        }
+    ], 
+    "keywords": [
+        "communication"
+    ], 
+    "id": 1767, 
+    "name": "CayenneLPP", 
+    "frameworks": [
+        "arduino"
+    ], 
+    "version": "1.0.0", 
+    "homepage": null
+}
