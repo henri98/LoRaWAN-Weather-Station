@@ -18,7 +18,7 @@
 // BME280 I2C address is 0x76(108)
 #define Addr 0x76
 
-#define DHTPIN 9     // what digital pin we're connected to
+#define DHTPIN 9     // digital pin DHT22
 
 // Uncomment whatever type you're using!
 //#define DHTTYPE DHT11   // DHT 11
